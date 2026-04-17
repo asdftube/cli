@@ -1,0 +1,9 @@
+node_modules
+dist
+coverage
+*.tgz
+*.mp4
+*.mp4.json
+*.mp4.txt
+*.mp4.review.json
+.DS_Store
