@@ -1382,7 +1382,7 @@ export async function renderReplayVideo(options: ReplayRenderOptions): Promise<R
   const transcriptPath = `${outputPath}.txt`;
   const reviewPath = `${outputPath}.review.json`;
   const visibleStartMs = events[0]!.timestampMs;
-  const watermarkText = options.publicId ? `https://asdf.tube/${options.publicId}` : options.watermark || DEFAULT_WATERMARK;
+  const watermarkText = options.watermark || DEFAULT_WATERMARK;
   const barTitle = `asdf.tube - ${options.title}`;
   const stages = buildStages(events, width, height, speedMultiplier).slice(-maxPages);
   const segmentGroups = splitStagesIntoSegments(stages, maxStagesPerSegment);
