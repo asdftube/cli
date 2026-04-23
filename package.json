@@ -1,6 +1,6 @@
 {
   "name": "@asdftube/cli",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Standalone CLI for recording, uploading, publishing, and operating asdf.tube videos",
   "packageManager": "npm@10.9.2",
   "license": "AGPL-3.0-only",
