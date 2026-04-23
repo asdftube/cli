@@ -24,6 +24,10 @@ export interface ScreenCaptureOptions {
   windowId?: number;
   app?: string;
   titleContains?: string;
+  includeCursor?: boolean;
+  showClicks?: boolean;
+  withAudio?: boolean;
+  audioDeviceId?: string;
 }
 
 async function runCommand(command: string, args: string[], cwd = process.cwd()): Promise<string> {
@@ -142,6 +146,32 @@ async function normalizeCapturedVideo(tempPath: string, outputPath: string, cwd:
   return outputPath;
 }
 
+export function buildScreenCaptureVideoArgs(
+  options: Pick<ScreenCaptureOptions, 'seconds' | 'includeCursor' | 'showClicks' | 'withAudio' | 'audioDeviceId' | 'display'>,
+  rawPath: string,
+  windowId?: number
+): string[] {
+  const args = ['-v', '-x', `-V${Math.max(1, Math.round(options.seconds))}`];
+  if (options.includeCursor !== false) {
+    args.push('-C');
+  }
+  if (options.showClicks !== false) {
+    args.push('-k');
+  }
+  if (options.audioDeviceId) {
+    args.push(`-G${options.audioDeviceId}`);
+  } else if (options.withAudio) {
+    args.push('-g');
+  }
+  if (windowId != null) {
+    args.push(`-l${windowId}`);
+  } else if (options.display != null) {
+    args.push(`-D${options.display}`);
+  }
+  args.push(rawPath);
+  return args;
+}
+
 export async function recordDesktopVideo(options: ScreenCaptureOptions): Promise<string> {
   const cwd = options.cwd || process.cwd();
   const outputPath = resolve(cwd, options.outputPath);
@@ -149,11 +179,7 @@ export async function recordDesktopVideo(options: ScreenCaptureOptions): Promise
   const rawPath = join(tempDir, 'capture.mov');
 
   try {
-    const args = ['-v', '-x', `-V${Math.max(1, Math.round(options.seconds))}`];
-    if (options.display != null) {
-      args.push(`-D${options.display}`);
-    }
-    args.push(rawPath);
+    const args = buildScreenCaptureVideoArgs(options, rawPath);
     await runCommand('screencapture', args, cwd);
     return await normalizeCapturedVideo(rawPath, outputPath, cwd);
   } finally {
@@ -170,7 +196,8 @@ export async function recordWindowVideo(options: ScreenCaptureOptions): Promise<
   const rawPath = join(tempDir, 'capture.mov');
 
   try {
-    await runCommand('screencapture', ['-v', '-x', `-V${Math.max(1, Math.round(options.seconds))}`, `-l${window.id}`, rawPath], cwd);
+    const args = buildScreenCaptureVideoArgs(options, rawPath, window.id);
+    await runCommand('screencapture', args, cwd);
     return {
       outputPath: await normalizeCapturedVideo(rawPath, outputPath, cwd),
       window

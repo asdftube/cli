@@ -81,9 +81,9 @@ asdftube auth
 asdftube upload ./recording.mp4 --wait
 asdftube publish ./recording.mp4 --title "Demo walkthrough"
 asdftube record terminal --cmd "seq 1 10" --text-size standard --publish --title "Terminal demo"
-asdftube record desktop --seconds 10 --publish --title "Desktop capture"
+asdftube record desktop --seconds 10 --with-audio --publish --title "Desktop capture"
 asdftube record windows
-asdftube record window --window-id 184 --seconds 10 --publish --title "Window capture"
+asdftube record window --window-id 184 --seconds 10 --with-audio --publish --title "Window capture"
 asdftube edit video ./demo.mp4 --prompt "crop out the first 15 seconds of the video"
 asdftube edit video ./demo.mp4 --prompt "speed up video 3x from 0:30 to 0:50"
 asdftube edit video ./demo.mp4 --prompt "blur out 0:55 to 1:10 while I type something sensitive"
@@ -129,7 +129,8 @@ Prompt editing notes:
   - mix or replace audio with an extra track
   - stitch in extra clips passed via `--asset`
   - split explicit ranges into separate output files
-- Automatic large-cursor and click-ring effects are not implemented yet because the current capture path does not record pointer telemetry.
+- Desktop/window captures include the macOS cursor and native click indicator by default. Add `--no-cursor` or `--no-clicks` to disable them.
+- Desktop/window audio uses macOS `screencapture` input capture through `--with-audio` or a specific `--audio-device-id`. Browser/system audio may require a macOS loopback input device.
 
 Custom replay redactions:
 
@@ -170,7 +171,7 @@ Notes:
 
 - Replay rendering and redaction happen locally before publish.
 - Review `*.review.json` and `*.txt` replay artifacts before uploading the final MP4.
-- Desktop/window capture on macOS requires Screen Recording permission for the terminal app running `asdftube`.
+- Desktop/window capture on macOS requires Screen Recording permission for the terminal app running `asdftube`. `--with-audio` may also require Microphone permission for that terminal app.
 - `ffmpeg` and `ffprobe` must be available on your PATH for replay rendering and capture packaging.
 - `gitleaks` is optional but recommended for stronger local secret scanning during replay redaction.
 

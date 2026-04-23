@@ -964,8 +964,8 @@ function createUsage(): string {
     '  asdftube upload <file> [--wait] [--json] [--part-size-mb <mb>] [--base-url <url>]',
     '  asdftube publish <file> [--title <title>] [--preset auto|landscape_hd|square_social|story_portrait] [--no-watermark] [--json]',
     `  asdftube record terminal [--cmd <shell>] [--output <file>] [--prompt <text>] [--text-size ${describeVideoTextSizePresets()}] [--publish] [--title <title>] [--json]`,
-    '  asdftube record desktop [--seconds <n>] [--display <id>] [--output <file>] [--publish] [--title <title>] [--json]',
-    '  asdftube record window [--window-id <id> | --app <name> [--title-contains <text>]] [--seconds <n>] [--output <file>] [--publish] [--title <title>] [--json]',
+    '  asdftube record desktop [--seconds <n>] [--display <id>] [--output <file>] [--with-audio] [--audio-device-id <id>] [--no-cursor] [--no-clicks] [--publish] [--title <title>] [--json]',
+    '  asdftube record window [--window-id <id> | --app <name> [--title-contains <text>]] [--seconds <n>] [--output <file>] [--with-audio] [--audio-device-id <id>] [--no-cursor] [--no-clicks] [--publish] [--title <title>] [--json]',
     '  asdftube record windows [--json]',
     '  asdftube edit video <file> --prompt "<natural language edit>" [--asset <path[,path...]>] [--output <file>] [--publish] [--title <title>] [--json]',
     `  asdftube replay codex|gemini [latest|<session-hash>|<query>] [--review-only] [--publish --yes] [--redactions <rules>] [--text-size ${describeVideoTextSizePresets()}] [--json]`,
@@ -1445,6 +1445,10 @@ async function handleRecordCommand(runtime: Required<CliRuntime>, parsed: Parsed
       cwd: runtime.cwd,
       outputPath: getOptionString(parsed, 'output') ?? join(runtime.cwd, 'asdftube-desktop-capture.mp4'),
       seconds: parsePositiveNumber(getOptionString(parsed, 'seconds'), 8),
+      includeCursor: parsed.options.get('cursor') !== false,
+      showClicks: parsed.options.get('clicks') !== false,
+      withAudio: getOptionBoolean(parsed, 'with-audio'),
+      ...(getOptionString(parsed, 'audio-device-id') ? { audioDeviceId: getOptionString(parsed, 'audio-device-id') } : {}),
       ...(getOptionString(parsed, 'display') ? { display: Number(getOptionString(parsed, 'display')) } : {})
     });
 
@@ -1494,6 +1498,10 @@ async function handleRecordCommand(runtime: Required<CliRuntime>, parsed: Parsed
       cwd: runtime.cwd,
       outputPath: getOptionString(parsed, 'output') ?? join(runtime.cwd, 'asdftube-window-capture.mp4'),
       seconds: parsePositiveNumber(getOptionString(parsed, 'seconds'), 8),
+      includeCursor: parsed.options.get('cursor') !== false,
+      showClicks: parsed.options.get('clicks') !== false,
+      withAudio: getOptionBoolean(parsed, 'with-audio'),
+      ...(getOptionString(parsed, 'audio-device-id') ? { audioDeviceId: getOptionString(parsed, 'audio-device-id') } : {}),
       ...(getOptionString(parsed, 'window-id') ? { windowId: Number(getOptionString(parsed, 'window-id')) } : {}),
       ...(getOptionString(parsed, 'app') ? { app: getOptionString(parsed, 'app') } : {}),
       ...(getOptionString(parsed, 'title-contains') ? { titleContains: getOptionString(parsed, 'title-contains') } : {})
