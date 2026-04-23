@@ -1,0 +1,65 @@
+{
+  "name": "@asdftube/cli",
+  "version": "0.3.0",
+  "description": "Standalone CLI for recording, uploading, publishing, and operating asdf.tube videos",
+  "packageManager": "npm@10.9.2",
+  "license": "AGPL-3.0-only",
+  "author": "asdftube",
+  "homepage": "https://asdf.tube",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asdftube/cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/asdftube/cli/issues"
+  },
+  "keywords": [
+    "asdf.tube",
+    "video",
+    "terminal",
+    "screen-recording",
+    "codex",
+    "claude",
+    "gemini",
+    "opencode",
+    "cli"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "asdftube": "dist/cli.js"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "gitleaks.toml"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "eslint \"src/**/*.ts\" \"test/**/*.ts\"",
+    "test": "vitest run",
+    "prepack": "npm run build",
+    "prepublishOnly": "npm test"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.24.0",
+    "@types/node": "^24.5.2",
+    "eslint": "^9.24.0",
+    "globals": "^16.0.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.29.1",
+    "vitest": "^3.1.1"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^4.3.6"
+  }
+}

@@ -1,0 +1,25 @@
+title = "asdftube cli gitleaks config"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "npm-token"
+description = "npm access token"
+regex = '''\bnpm_[A-Za-z0-9]{16,}\b'''
+
+[[rules]]
+id = "openai-style-token"
+description = "OpenAI-style API token"
+regex = '''\b(?:sk|rk)_[A-Za-z0-9_]{16,}\b'''
+
+[[rules]]
+id = "github-pat"
+description = "GitHub personal access token"
+regex = '''\b(?:ghp|gho|ghu|ghs|ghr)_[A-Za-z0-9_]{16,}\b'''
+
+[[rules]]
+id = "cloudflare-api-token"
+description = "Cloudflare API token"
+regex = '''\b[A-Za-z0-9_-]{35,}\b'''
+path = '''(?i)(?:cloudflare|wrangler|cf)'''
